@@ -42,9 +42,10 @@ class ShowTasks extends StatelessWidget {
               );
 
               return AnimationConfiguration.staggeredList(
+                duration: Duration(milliseconds: 100),
                 position: index,
                 child: SlideAnimation(
-                  horizontalOffset: 300,
+                  horizontalOffset: 100,
                   child: FadeInAnimation(
                     child: Row(
                       children: [
