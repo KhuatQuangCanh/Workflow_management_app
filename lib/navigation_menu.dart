@@ -26,7 +26,7 @@ class NavigationMenu extends StatelessWidget {
             indicatorColor: darkMode? CColors.white.withOpacity(0.1): CColors.black.withOpacity(0.1),
             destinations: const [
               NavigationDestination(icon: Icon(Iconsax.home), label: 'Home'),
-              NavigationDestination(icon: Icon(Iconsax.task), label: 'Assigned tasks'),
+              NavigationDestination(icon: Icon(Icons.group), label: 'Group work'),
               NavigationDestination(icon: Icon(Iconsax.task), label: 'Personal tasks'),
               NavigationDestination(icon: Icon(Iconsax.user), label: 'Profile'),
             ],
