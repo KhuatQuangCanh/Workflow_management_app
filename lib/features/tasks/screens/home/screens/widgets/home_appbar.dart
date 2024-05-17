@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:workflow_management_app/common/widgets/appbar/appbar.dart';
+import 'package:workflow_management_app/utils/constants/image_strings.dart';
 
 import '../../../../../../utils/constants/colors.dart';
 import '../../../../../../utils/constants/text_string.dart';
@@ -31,7 +32,7 @@ class CHomeAppBar extends StatelessWidget {
         ],
       ),
       actions: [
-        IconButton(onPressed: () {}, icon: Icon(Iconsax.edit, color: CColors.white,))
+        IconButton(onPressed: () {}, icon: Image(image: AssetImage(CImages.logoutIcon)))
       ]
     );
   }

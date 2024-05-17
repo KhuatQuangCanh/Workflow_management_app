@@ -155,9 +155,19 @@ class PersonalTasksController extends GetxController {
   getTasks();
   }
 
-  void markTaskCompleted(int id) async {
+  void markTaskCompleted(int? id) async {
     await DBHelper.update(id);
     getTasks();
+  }
+
+  // Sapxep theo thoi gian bat dau
+  int _compareTime(String? time1, String? time2) {
+    DateTime dateTime1 = DateFormat("HH:mm").parse(time1.toString());
+    DateTime dateTime2 = DateFormat("HH:mm").parse(time2.toString());
+    return dateTime1.compareTo(dateTime2);
+  }
+  void sortTime() {
+    taskList.sort((a, b) => _compareTime(a.startTime, b.startTime));
   }
 }
 

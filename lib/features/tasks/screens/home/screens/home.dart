@@ -15,6 +15,8 @@ import 'package:workflow_management_app/utils/constants/colors.dart';
 import 'package:workflow_management_app/utils/constants/sizes.dart';
 
 import '../../../../../utils/helpers/helper_functions.dart';
+import '../../personal_tasks/controllers/personal_tasks_controller.dart';
+import '../../personal_tasks/screens/widgets/add_task_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -37,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final dark = CHelperFunctions.isDarkMode(context);
+    final controller = Get.put(PersonalTasksController());
 
     return Scaffold(
       body: Column(
@@ -50,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   height: CSizes.spaceBtwItems,
                 ),
-      
+
                 // Search date
                 CSearchContainer(),
                 SizedBox(
@@ -59,67 +62,96 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-      
+
           // --Body
           Padding(
             padding: EdgeInsets.only(
-                left: CSizes.defaultSpace,
-                right: CSizes.defaultSpace,
-               ),
+              left: CSizes.defaultSpace,
+              right: CSizes.defaultSpace,
+            ),
             child: Column(
               children: [
                 CSectionHeading(
-                  title: "Today' Task",
-                 showActionButton: false,
+                  title: "Today' Tasks",
+                  showActionButton: false,
                 ),
-                SizedBox(height: CSizes.spaceBtwItems/2,),
-
+                SizedBox(
+                  height: CSizes.spaceBtwItems / 2,
+                ),
                 Container(
                   padding: EdgeInsets.only(left: CSizes.sm),
                   width: MediaQuery.of(context).size.width,
-                  height: 400,
+                  height: 250,
                   decoration: BoxDecoration(
-                    boxShadow: [CShadowStyle.verticalProductShadow],
-                    borderRadius: BorderRadius.circular(CSizes.productImageRadius),
-                      color: dark ? CColors.darkerGrey : CColors.white
-                  ),
+                      boxShadow: [CShadowStyle.verticalProductShadow],
+                      borderRadius:
+                          BorderRadius.circular(CSizes.productImageRadius),
+                      color: dark? CColors.dark: Colors.white),
+
                   child: Column(
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            DateFormat("dd/MM/yyyy").format(DateTime.now()),
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: CHelperFunctions.isDarkMode(context)? Colors.white : Colors.grey),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: CSizes.sm, top: CSizes.sm),
+                            child: Text( "day: "+
+                              DateFormat("dd/MM").format(DateTime.now()),
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: CColors.darkGrey,
+                              ),
+                            ),
                           ),
                           // -- Add Task
-                          Container(
-                            decoration: const BoxDecoration(
-                                color: CColors.dark,
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(CSizes.cardRadiusMd),
-                                    bottomLeft: Radius.circular(CSizes.productImageRadius)
-                                )
+                          GestureDetector(
+                            onTap: () async {
+                              await Get.to(const AddTaskScreen());
+                              controller.getTasks();
+                              controller.titleController.clear();
+                              controller.noteController.clear();
+                            },
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: CColors.primary,
+                                  borderRadius: BorderRadius.only(
+                                      topRight:
+                                          Radius.circular(CSizes.cardRadiusMd),
+                                      bottomLeft: Radius.circular(
+                                          CSizes.productImageRadius))),
+                              child: const SizedBox(
+                                  width: CSizes.iconLg,
+                                  height: CSizes.iconLg,
+                                  child: Center(
+                                      child: Icon(
+                                    Iconsax.add,
+                                    color: CColors.white,
+                                  ))),
                             ),
-                            child: const SizedBox(
-                                width: CSizes.iconLg ,
-                                height: CSizes.iconLg ,
-                                child: Center(child: Icon(Iconsax.add, color: CColors.white,))),
-
                           )
-
                         ],
                       ),
-                      SizedBox(height: CSizes.spaceBtwItems/2,),
-
+                      SizedBox(
+                        height: CSizes.spaceBtwItems / 2,
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        height: 0.5,
+                        width: 300,
+                        color: CColors.primary,
+                      ),
+                      SizedBox(
+                        height: CSizes.spaceBtwItems / 2,
+                      ),
                       ShowPersonalTaskToday()
-
                     ],
                   ),
-
-
-
                 ),
+
+                SizedBox(height: CSizes.spaceBtwSections/2,),
+                CSectionHeading(title: "Group work",showActionButton: false,)
               ],
             ),
           )
