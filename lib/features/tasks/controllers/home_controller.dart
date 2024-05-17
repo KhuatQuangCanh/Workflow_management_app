@@ -11,9 +11,7 @@ class HomeController extends GetxController {
     carousalCurrentIndex.value = index;
   }
 
-  var selectedDate = DateTime
-      .now()
-      .obs;
+
 
   @override
   void onInit() {
@@ -28,11 +26,16 @@ class HomeController extends GetxController {
   @override
   void onClose() {}
 
+  var selectedDate = DateTime
+      .now()
+      .obs;
+
   chooseDate() async {
     DateTime? pickedDate = await showDatePicker(
         context: Get.context!,
-        initialDate: selectedDate.value,
-        firstDate: DateTime.now(), lastDate: DateTime(2025),
+        initialDate: selectedDate.value.isBefore(DateTime.now())? DateTime.now() : selectedDate.value,
+        firstDate: DateTime.now(),
+      lastDate: DateTime(2025),
       // initialEntryMode: DatePickerEntryMode.input,
       //   initialDatePickerMode: DatePickerMode.year,
       fieldHintText: 'Date/Month/Year',
