@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:workflow_management_app/features/tasks/screens/personal_tasks/db/db_helper.dart';
 import 'package:workflow_management_app/utils/constants/colors.dart';
 
-import '../models/task.dart';
+import '../models/personal_task.dart';
 
 class PersonalTasksController extends GetxController {
   static PersonalTasksController get instance => Get.find();
@@ -60,7 +60,7 @@ class PersonalTasksController extends GetxController {
 
 
   var startTime = DateFormat('HH:mm').format(DateTime.now()).obs;
-  var endTime = "9:30".obs;
+  var endTime = "00:00".obs;
 
   getTimeFromUser({required bool isStartTime}) async {
     var pickedTime = await showTimePicker(

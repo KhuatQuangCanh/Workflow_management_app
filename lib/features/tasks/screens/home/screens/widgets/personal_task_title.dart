@@ -9,7 +9,7 @@ import '../../../../../../common/widgets/notified/notified_page.dart';
 import '../../../../../../utils/constants/image_strings.dart';
 import '../../../../../../utils/constants/sizes.dart';
 import '../../../personal_tasks/controllers/personal_tasks_controller.dart';
-import '../../../personal_tasks/models/task.dart';
+import '../../../personal_tasks/models/personal_task.dart';
 
 class PersonalTaskTitle extends StatelessWidget {
   final PersonalTask? task;

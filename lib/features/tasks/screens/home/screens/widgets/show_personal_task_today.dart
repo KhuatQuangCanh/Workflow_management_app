@@ -5,8 +5,9 @@ import 'package:intl/intl.dart';
 import 'package:workflow_management_app/features/tasks/screens/home/screens/widgets/personal_task_title.dart';
 import 'package:workflow_management_app/utils/constants/image_strings.dart';
 
+import '../../../../../../utils/constants/sizes.dart';
 import '../../../personal_tasks/controllers/personal_tasks_controller.dart';
-import '../../../personal_tasks/models/task.dart';
+import '../../../personal_tasks/models/personal_task.dart';
 
 class ShowPersonalTaskToday extends StatelessWidget {
   const ShowPersonalTaskToday({super.key});
@@ -36,8 +37,14 @@ class ShowPersonalTaskToday extends StatelessWidget {
                   }
 
                 } else {
-                  return Container(
-                    // child: Image(image: AssetImage(CImages.addTaskImage)),
+                  return Padding(
+                    padding: EdgeInsets.all(CSizes.md),
+                    child: Column(
+                      children: [
+                        Text("You don't have a schedule today", style: TextStyle(color: Colors.grey),),
+                        Image(image: AssetImage(CImages.onBoardingImage1),width: 150, height: 150,),
+                      ],
+                    ),
                   );
                 }
               }

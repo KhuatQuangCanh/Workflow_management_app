@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:workflow_management_app/features/tasks/screens/personal_tasks/models/task.dart';
+import 'package:workflow_management_app/features/tasks/screens/personal_tasks/models/personal_task.dart';
 import 'package:workflow_management_app/features/tasks/screens/personal_tasks/screens/widgets/task_title.dart';
 import 'package:workflow_management_app/services/notification_services.dart';
 import 'package:workflow_management_app/utils/constants/colors.dart';
@@ -20,6 +20,7 @@ class ShowTasks extends StatelessWidget {
     final controller = Get.put(PersonalTasksController());
 
     return Obx(() {
+      controller.sortTime();
       return Expanded(
         child: ListView.builder(
           padding: EdgeInsets.zero,

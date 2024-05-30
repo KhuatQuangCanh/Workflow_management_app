@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:workflow_management_app/features/tasks/screens/personal_tasks/models/task.dart';
+import 'package:workflow_management_app/features/tasks/screens/personal_tasks/models/personal_task.dart';
 import 'package:workflow_management_app/utils/constants/image_strings.dart';
 import 'package:workflow_management_app/utils/constants/sizes.dart';
 

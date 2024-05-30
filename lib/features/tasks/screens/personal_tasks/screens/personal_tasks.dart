@@ -13,9 +13,14 @@ import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../common/widgets/custom_shapes/containers/primary_header_container.dart';
 import '../../../../../common/widgets/texts/section_heading.dart';
 
-class PersonalTasksScreen extends StatelessWidget {
+class PersonalTasksScreen extends StatefulWidget {
   const PersonalTasksScreen({super.key});
 
+  @override
+  State<PersonalTasksScreen> createState() => _PersonalTasksScreenState();
+}
+
+class _PersonalTasksScreenState extends State<PersonalTasksScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -6,6 +6,7 @@ import 'package:workflow_management_app/features/tasks/screens/personal_tasks/sc
 import 'package:workflow_management_app/utils/constants/sizes.dart';
 import 'package:workflow_management_app/utils/helpers/helper_functions.dart';
 
+import '../../../../../../utils/constants/colors.dart';
 import '../../controllers/personal_tasks_controller.dart';
 
 class AddTaskBar extends StatelessWidget {
@@ -39,7 +40,7 @@ class AddTaskBar extends StatelessWidget {
             ),
           ),
 
-          CButtonAddTask(label:"+ Add Task", onTap: () async {
+          CButtonAddTask(color: CColors.grey.withOpacity(0.4),label:"+ Add Task", onTap: () async {
             await Get.to(const AddTaskScreen());
             controller.getTasks();
             controller.titleController.clear();
