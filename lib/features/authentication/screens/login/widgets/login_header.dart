@@ -12,8 +12,8 @@ class CLoginHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Image(
-            height: 120,
-            image: AssetImage(CImages.darkAppLogo),
+          height: 120,
+          image: AssetImage(CImages.darkAppLogo),
         ),
         Text(
           CTexts.loginTitle,

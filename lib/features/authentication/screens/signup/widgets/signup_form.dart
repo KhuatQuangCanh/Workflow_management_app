@@ -6,6 +6,9 @@ import 'package:workflow_management_app/features/authentication/screens/signup/w
 import 'package:workflow_management_app/utils/constants/sizes.dart';
 import 'package:workflow_management_app/utils/constants/text_string.dart';
 
+import '../../../../../utils/validators/validation.dart';
+import '../../../controllers/signup/signup_controller.dart';
+
 class CSignupForm extends StatelessWidget {
   const CSignupForm({
     super.key,
@@ -13,13 +16,17 @@ class CSignupForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(SignupController());
     return Form(
+      key: controller.signupFormKey,
       child: Column(
         children: [
           Row(
             children: [
               Expanded(
                 child: TextFormField(
+                  controller: controller.firstName,
+                  validator:(value) => CValidator.validateEmtyText('FirstName', value),
                   expands: false,
                   decoration: const InputDecoration(
                     labelText: CTexts.firstName,
@@ -32,6 +39,8 @@ class CSignupForm extends StatelessWidget {
               ),
               Expanded(
                 child: TextFormField(
+                  controller: controller.lastName,
+                  validator: (value) => CValidator.validateEmtyText('LastName', value),
                   expands: false,
                   decoration: const InputDecoration(
                     labelText: CTexts.lastName,
@@ -41,24 +50,26 @@ class CSignupForm extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(
-            height: CSizes.spaceBtwInputFields,
-          ),
+
 
           /// Username
-          TextFormField(
-            expands: false,
-            decoration: const InputDecoration(
-              labelText: CTexts.username,
-              prefixIcon: Icon(Iconsax.user_edit),
-            ),
-          ),
+          // TextFormField(
+          //   controller: controller.username,
+          //   validator: (value) => CValidator.validateEmtyText('Username', value),
+          //   expands: false,
+          //   decoration: const InputDecoration(
+          //     labelText: CTexts.username,
+          //     prefixIcon: Icon(Iconsax.user_edit),
+          //   ),
+          // ),
           const SizedBox(
             height: CSizes.spaceBtwInputFields,
           ),
 
           /// Email
           TextFormField(
+            controller: controller.email,
+            validator: (value) => CValidator.validateEmail(value),
             decoration: const InputDecoration(
               labelText: CTexts.email,
               prefixIcon: Icon(Iconsax.direct),
@@ -70,6 +81,8 @@ class CSignupForm extends StatelessWidget {
 
           /// Phone Number
           TextFormField(
+            controller: controller.phoneNumber,
+            validator: (value) => CValidator.validatePhoneNumber(value),
             decoration: const InputDecoration(
               labelText: CTexts.phoneNo,
               prefixIcon: Icon(Iconsax.call),
@@ -80,12 +93,19 @@ class CSignupForm extends StatelessWidget {
           ),
 
           /// Password
-          TextFormField(
-            obscureText: true,
-            decoration: const InputDecoration(
-                labelText: CTexts.password,
-                prefixIcon: Icon(Iconsax.password_check),
-                suffixIcon: Icon(Iconsax.eye_slash)),
+          Obx(
+                () => TextFormField(
+              controller: controller.password,
+              validator: (value) => CValidator.validatePassword(value),
+              obscureText: controller.hidePassword.value,
+              decoration: InputDecoration(
+                  labelText: CTexts.password,
+                  prefixIcon: Icon(Iconsax.password_check),
+                  suffixIcon: IconButton(
+                      onPressed: () => controller.hidePassword.value = !controller.hidePassword.value,
+                      icon: Icon(controller.hidePassword.value? Iconsax.eye_slash : Iconsax.eye))
+              ),
+            ),
           ),
           const SizedBox(
             height: CSizes.spaceBtwInputFields,
@@ -100,7 +120,7 @@ class CSignupForm extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-                onPressed: () => Get.to(() => const VerifyEmailScreen()),
+                onPressed: () => controller.signup(),
                 child: const Text(CTexts.createAccount)),
           )
         ],

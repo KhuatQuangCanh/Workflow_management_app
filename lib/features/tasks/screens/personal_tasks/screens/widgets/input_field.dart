@@ -9,12 +9,13 @@ import 'package:workflow_management_app/utils/helpers/helper_functions.dart';
 import '../../../../../../utils/constants/text_string.dart';
 
 class CInputField extends StatelessWidget {
-  const CInputField({super.key, this.title = "", this.hint = "", this.controller, this.widget,});
+  const CInputField({super.key, this.title = "", this.hint = "", this.controller, this.widget, this.dec = true,});
 
   final String title;
   final String hint;
   final TextEditingController? controller;
   final Widget? widget;
+  final bool? dec;
 
 
   @override
@@ -27,7 +28,8 @@ class CInputField extends StatelessWidget {
           SizedBox(height: CSizes.spaceBtwItems/5,),
           IntrinsicHeight(
             child: Container(
-              decoration: BoxDecoration(
+              decoration:
+              BoxDecoration(
                 border: Border.all(color: Colors.grey, width: 1.0),
                 borderRadius: BorderRadius.circular(12)
               ),
