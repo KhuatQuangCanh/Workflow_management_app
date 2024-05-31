@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:workflow_management_app/common/widgets/appbar/appbar.dart';
+import 'package:workflow_management_app/data/repositories/authentication/authentication_repository.dart';
+import 'package:workflow_management_app/features/personalization/controllers/user_controller.dart';
 import 'package:workflow_management_app/utils/constants/image_strings.dart';
 
 import '../../../../../../utils/constants/colors.dart';
@@ -11,6 +14,8 @@ class CHomeAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authRepo = Get.find<AuthenticationRepository>();
+    final controller = Get.put(UserController());
     return CAppBar(
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -22,17 +27,22 @@ class CHomeAppBar extends StatelessWidget {
                 .labelMedium!
                 .apply(color: CColors.grey),
           ),
-          Text(
-            CTexts.homeAppbarSubTitle,
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall!
-                .apply(color: CColors.white),
+          Obx( ()
+            => Text(
+              controller.user.value.fullName,
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall!
+                  .apply(color: CColors.white),
+            ),
           )
         ],
       ),
       actions: [
-        IconButton(onPressed: () {}, icon: Image(image: AssetImage(CImages.logoutIcon)))
+        IconButton(onPressed: () async {
+          // Xử lý đăng xuất tại đây, ví dụ: xoá token người dùng, v.v.
+          await authRepo.logout();
+        }, icon: Image(image: AssetImage(CImages.logoutIcon)))
       ]
     );
   }

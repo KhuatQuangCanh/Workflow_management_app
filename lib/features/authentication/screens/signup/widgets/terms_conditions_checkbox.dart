@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:workflow_management_app/features/authentication/controllers/signup/signup_controller.dart';
 import 'package:workflow_management_app/utils/constants/colors.dart';
 import 'package:workflow_management_app/utils/constants/sizes.dart';
 import 'package:workflow_management_app/utils/constants/text_string.dart';
@@ -10,13 +12,14 @@ class CTerm_conditions_checkbox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(SignupController());
     // final dark = THelperFunctions.isDarkMode(context);
     return Row(
       children: [
         SizedBox(
           width: 24,
           height: 24,
-          child: Checkbox(value: false, onChanged: (value) {}),
+          child: Obx(()=> Checkbox(value: controller.privacyPolicy.value, onChanged: (value) => controller.privacyPolicy.value = !controller.privacyPolicy.value )),
         ),
         const SizedBox(
           width: CSizes.spaceBtwItems,

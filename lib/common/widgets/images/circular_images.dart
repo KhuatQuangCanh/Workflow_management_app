@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utils/constants/colors.dart';
@@ -35,11 +36,22 @@ class CCircularImage extends StatelessWidget {
         color: CHelperFunctions.isDarkMode(context) ? CColors.black: CColors.white,
         borderRadius:  BorderRadius.circular(100),
       ),
-      child: Center(
-        child: Image(
-          fit: fit,
-          image: isNetworkImage ? NetworkImage(image) : AssetImage(image) as ImageProvider,
-          color: overlayColor,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(100),
+        child: Center(
+          child: isNetworkImage
+              ? CachedNetworkImage(
+            fit: fit,
+              color: overlayColor,
+              imageUrl: image,
+            // progressIndicatorBuilder: ,
+            errorWidget: (context, url, error) => Icon(Icons.error),
+          )
+              :Image(
+            fit: fit,
+            image:  AssetImage(image),
+            color: overlayColor,
+          ),
         ),
       ),
 

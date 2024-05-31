@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:workflow_management_app/bindings/general_bindings.dart';
 import 'package:workflow_management_app/features/authentication/screens/onboarding/onboarding.dart';
+import 'package:workflow_management_app/utils/constants/colors.dart';
 import 'package:workflow_management_app/utils/theme/theme.dart';
 
 class App extends StatelessWidget {
@@ -12,7 +14,8 @@ class App extends StatelessWidget {
       themeMode: ThemeMode.system,
       theme: CAppTheme.lightTheme,
       darkTheme: CAppTheme.darkTheme,
-      home: const OnBoardingScreen(),
+      initialBinding: GeneralBindings(),
+      home: const Scaffold(backgroundColor: CColors.primary, body: Center(child: CircularProgressIndicator(color: CColors.white,),),),
     );
   }
 }
