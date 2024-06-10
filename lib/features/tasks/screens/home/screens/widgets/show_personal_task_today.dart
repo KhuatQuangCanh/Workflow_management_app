@@ -33,7 +33,6 @@ class ShowPersonalTaskToday extends StatelessWidget {
                     return  PersonalTaskTitle(task);
                   }else {
                     return Container();
-
                   }
 
                 } else {

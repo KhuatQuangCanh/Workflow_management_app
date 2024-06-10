@@ -8,7 +8,9 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:workflow_management_app/data/repositories/authentication/authentication_repository.dart';
+import 'package:workflow_management_app/data/repositories/group_task/task_repository.dart';
 import 'package:workflow_management_app/data/repositories/user_group/userGroup_repository.dart';
+import 'package:workflow_management_app/data/repositories/user_task/userTask_repository.dart';
 import 'package:workflow_management_app/features/tasks/models/group_model.dart';
 import 'package:workflow_management_app/data/repositories/group/group_repository.dart';
 import 'package:workflow_management_app/data/repositories/user/user_repository.dart';
@@ -27,6 +29,9 @@ class GroupController extends GetxController {
 
   final GroupRepository _groupRepo = Get.put(GroupRepository());
   final UserRepository _userRepo = Get.put(UserRepository());
+  final TaskRepository _taskRepo = Get.put(TaskRepository());
+  final UserTaskRepository _userTaskRepository = Get.put(UserTaskRepository());
+
 
   final GroupUserRepository _groupUserRepo = Get.put(GroupUserRepository());
   final RxList<GroupUserModel> groupUsers = <GroupUserModel>[].obs;
@@ -213,6 +218,7 @@ class GroupController extends GetxController {
       }
 
       Get.snackbar("Success", "Group created successfully");
+      await fetchUserGroups();
       clearFields();
       // Chuyển đến màn hình chi tiết group
       Get.off(() => GroupDetailScreen(group: newGroup));
@@ -337,5 +343,33 @@ class GroupController extends GetxController {
       Get.snackbar("Error", "Error updating members: $e");
     }
   }
+  Future<void> deleteGroup(String groupId) async {
+    try {
+      // Lấy danh sách task của group
+      final groupTasks = await _taskRepo.getTasksByGroupId(groupId);
 
+      // Xóa các task của group
+      for (final task in groupTasks) {
+        // Xóa các comment của task
+        await _taskRepo.deleteTaskComments(task.id);
+
+        // Xóa các user task của task
+        await _userTaskRepository.deleteUserTasksByTaskId(task.id);
+
+        // Xóa task
+        await _taskRepo.deleteTask(task.id);
+      }
+
+      // Xóa các người tham gia group
+      await _groupUserRepo.deleteGroupUsersByGroupId(groupId);
+
+      // Xóa group
+      await _groupRepo.deleteGroup(groupId);
+      await fetchUserGroups();
+      Get.back();
+      Get.snackbar("Success", "Group deleted successfully");
+    } catch (e) {
+      Get.snackbar("Error", "Error deleting group: $e");
+    }
+  }
 }

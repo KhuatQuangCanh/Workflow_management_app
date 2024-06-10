@@ -130,7 +130,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                                 },
                                               );
                                               if (result == true) {
-                                                // await groupController.deleteGroupAndTasks(widget.group.id);
+                                                await groupController.deleteGroup(widget.group.id);
                                               } else {
                                                 Navigator.of(context).pop();
                                               }
@@ -283,7 +283,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                 itemCount: userTasks.length,
                                 itemBuilder: (context, index) {
                                   final task = userTasks[index];
-                                  double taskWidth = userTasks.length == 1 ? screenWidth : 280; // Điều chỉnh chiều rộng của mục
+                                  double taskWidth = userTasks.length == 1 ? screenWidth : 290; // Điều chỉnh chiều rộng của mục
                                   return GestureDetector(
                                     onTap: () => Get.to(() => TaskDetailScreen(task: task)),
                                     child: Container(

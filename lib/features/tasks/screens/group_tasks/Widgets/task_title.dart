@@ -20,7 +20,7 @@ class _CYourTasksHorizontalState extends State<CYourTasksHorizontal> {
   @override
   Widget build(BuildContext context) {
     final dark = CHelperFunctions.isDarkMode(context);
-    // final TaskController taskController = TaskController.instance;
+    final TaskController taskController = TaskController.instance;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -28,14 +28,17 @@ class _CYourTasksHorizontalState extends State<CYourTasksHorizontal> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              widget.task.title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: dark ? Colors.white : Colors.black,
+            SizedBox(
+              width: 200,
+              child: Text(
+                widget.task.title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: dark ? Colors.white : Colors.black,
+                ),
               ),
             ),
             const SizedBox(height: 8),
@@ -56,25 +59,50 @@ class _CYourTasksHorizontalState extends State<CYourTasksHorizontal> {
             SizedBox(height: CSizes.spaceBtwItems,)
           ],
         ),
-    PopupMenuButton(
-          onSelected: (value) {
+        PopupMenuButton(
+          onSelected: (value) async {
             if (value == 'edit') {
-              // commentController.selectComment(comment);
+              taskController.showEditTaskDialog(context, widget.task);
             } else if (value == 'delete') {
-              // commentController.deleteComment(comment.id);
+              // Hiển thị hộp thoại xác nhận trước khi xóa
+              final confirm = await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Confirm Delete'),
+                    content: Text('Are you sure you want to delete this task? This action cannot be undone.'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(false);
+                        },
+                        child: Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(true);
+                        },
+                        child: Text('Delete'),
+                      ),
+                    ],
+                  );
+                },
+              );
+
+              if (confirm == true) {
+                await TaskController.instance.deleteTask(widget.task.id);
+              }
             }
           },
           itemBuilder: (context) => [
-            // if (comment.userId == userId) // Kiểm tra xem người dùng hiện tại có phải là người tạo comment không
-              PopupMenuItem(
-                value: 'edit',
-                child: Text('Edit'),
-              ),
-            // if (comment.userId == userId) // Kiểm tra xem người dùng hiện tại có phải là người tạo comment không
-              PopupMenuItem(
-                value: 'delete',
-                child: Text('Delete'),
-              ),
+            PopupMenuItem(
+              value: 'edit',
+              child: Text('Edit'),
+            ),
+            PopupMenuItem(
+              value: 'delete',
+              child: Text('Delete'),
+            ),
           ],
           icon: Icon(Icons.more_vert),
         ),

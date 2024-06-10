@@ -52,6 +52,18 @@ class GroupUserRepository extends GetxController {
       throw Exception('Error deleting group-user relation: $e');
     }
   }
+  Future<void> deleteGroupUsersByGroupId(String groupId) async {
+    try {
+      final groupUsers = await fetchGroupUsersByGroupId(groupId);
+      for (final groupUser in groupUsers) {
+        await _db.collection("GroupUsers").doc(groupUser.id).delete();
+      }
+    } on FirebaseException catch (e) {
+      throw Exception('FirebaseException: ${e.message}');
+    } catch (e) {
+      throw Exception('Error deleting group users by groupId: $e');
+    }
+  }
   Future<List<GroupUserModel>> fetchGroupUsersByGroupId(String groupId) async {
     try {
       final querySnapshot = await _db.collection("GroupUsers").where('groupId', isEqualTo: groupId).get();

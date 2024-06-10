@@ -11,13 +11,13 @@ class GroupUserController extends GetxController {
   final RxList<String> groupUserIds = <String>[].obs;
 
   // Lấy danh sách userId của một nhóm từ Firestore
-  Future<void> fetchGroupUserIds(String groupId) async {
-    try {
-      final List<GroupUserModel> groupUsers = await _groupUserRepo.fetchGroupUsersByGroupId(groupId);
-      final List<String> userIds = groupUsers.map((groupUser) => groupUser.userId).toList();
-      groupUserIds.assignAll(userIds);
-    } catch (e) {
-      print("Error fetching group user ids: $e");
-    }
-  }
+  // Future<void> fetchGroupUserIds(String groupId) async {
+  //   try {
+  //     final List<GroupUserModel> groupUsers = await _groupUserRepo.fetchGroupUsersByGroupId(groupId);
+  //     final List<String> userIds = groupUsers.map((groupUser) => groupUser.userId).toList();
+  //     groupUserIds.assignAll(userIds);
+  //   } catch (e) {
+  //     print("Error fetching group user ids: $e");
+  //   }
+  // }
 }

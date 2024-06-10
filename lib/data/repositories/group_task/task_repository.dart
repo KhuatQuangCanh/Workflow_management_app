@@ -53,6 +53,19 @@ class TaskRepository extends GetxController {
     }
   }
 
+  Future<void> deleteTaskComments(String taskId) async {
+    try {
+      final querySnapshot = await _db.collection('Comments')
+          .where('taskId', isEqualTo: taskId)
+          .get();
+      for (var doc in querySnapshot.docs) {
+        await doc.reference.delete();
+      }
+    } catch (e) {
+      throw Exception('Error deleting task comments: $e');
+    }
+  }
+
   Future<List<TaskModel>> getTasksByGroupId(String groupId) async {
     try {
       final querySnapshot = await _db.collection("Tasks")
@@ -63,5 +76,15 @@ class TaskRepository extends GetxController {
       throw Exception('Error getting tasks: ${e.message}');
     }
   }
+  Future<void> updateTaskCompletion(String taskId, bool isCompleted) async {
+    try {
+      await _db.collection("Tasks").doc(taskId).update({'isCompleted': isCompleted});
+    } on FirebaseException catch (e) {
+      throw Exception('FirebaseException: ${e.message}');
+    } catch (e) {
+      throw Exception('Error updating task completion: $e');
+    }
+  }
+
 
 }

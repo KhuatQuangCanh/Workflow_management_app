@@ -19,6 +19,26 @@ class TaskModel {
     required this.groupId,
   });
 
+  TaskModel copyWith({
+    String? id,
+    String? title,
+    String? description,
+    String? groupId,
+    DateTime? startTime,
+    DateTime? endTime,
+    bool? isCompleted,
+  }) {
+    return TaskModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      groupId: groupId ?? this.groupId,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      isCompleted: isCompleted ?? this.isCompleted,
+    );
+  }
+
 
   static TaskModel empty() => TaskModel(
     id: '',
