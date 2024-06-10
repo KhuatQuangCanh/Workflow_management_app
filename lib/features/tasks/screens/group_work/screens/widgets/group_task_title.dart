@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:workflow_management_app/utils/constants/colors.dart';
 
@@ -81,30 +82,7 @@ class GroupTaskTitle extends StatelessWidget {
               const SizedBox(
                 height: CSizes.spaceBtwItems / 2,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.people_alt_outlined,
-                        color: dark ? CColors.softGrey : CColors.darkerGrey,
-                      ),
-                      SizedBox(
-                        width: 4,
-                      ),
-                      Text(
-                        '${group?.memberIds.length ?? 0}',
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
-                    ],
-                  ),
-                  // Text(
-                  //   "Completed: ${taskStats['completed']}/${taskStats['total']}",
-                  //   style: Theme.of(context).textTheme.titleSmall,
-                  // ),
-                ],
-              ),
+
             ],
           ),
         ),

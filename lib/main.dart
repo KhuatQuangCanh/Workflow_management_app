@@ -5,9 +5,11 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:workflow_management_app/app.dart';
 import 'package:workflow_management_app/data/repositories/authentication/authentication_repository.dart';
+import 'package:workflow_management_app/features/personalization/controllers/user_controller.dart';
 import 'package:workflow_management_app/features/tasks/controllers/group/group_controller.dart';
 import 'package:workflow_management_app/features/tasks/controllers/group_task/task_controller.dart';
 import 'package:workflow_management_app/features/tasks/screens/personal_tasks/db/db_helper.dart';
+import 'package:workflow_management_app/services/notification_services.dart';
 
 import 'firebase_options.dart';
 
@@ -29,9 +31,11 @@ void main() async{
   // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,).then(
           (FirebaseApp value) => Get.put(AuthenticationRepository()));
-// Gọi Get.put(GroupController()) để đăng ký GroupController
-  Get.put(GroupController());
-  Get.put(TaskController());
 
+  // Get.put(GroupController(), permanent: true);
+  Get.put(TaskController(), permanent: true);
+  // Get.put(UserController(), permanent: true);
+  final NotifyHelper notifyHelper = NotifyHelper();
+  await notifyHelper.initializeNotification();
   runApp(const App());
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:workflow_management_app/features/personalization/controllers/user_controller.dart';
 import 'package:workflow_management_app/features/tasks/controllers/group/group_controller.dart';
-import 'package:workflow_management_app/features/tasks/screens/group_tasks/group_tasks.dart';
+import 'package:workflow_management_app/features/tasks/screens/group_tasks/group_detail.dart';
 import 'package:workflow_management_app/features/tasks/screens/group_work/screens/widgets/add_user.dart';
 import 'package:workflow_management_app/features/tasks/screens/group_work/screens/widgets/attach_document_field.dart';
 import 'package:workflow_management_app/utils/constants/sizes.dart';
@@ -16,7 +16,7 @@ class AddGroupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(GroupController());
+    final groupController = GroupController.instance;
     final userController = UserController.instance;
     return Scaffold(
       appBar: const CAppBar(
@@ -49,7 +49,7 @@ class AddGroupScreen extends StatelessWidget {
 
               TextFormField(
                 autofocus: false,
-                controller: controller.titleController,
+                controller: groupController.titleController,
                 maxLines: 1,
                 style: const TextStyle(fontSize: 24, fontWeight: FontWeight.normal),
                 decoration: const InputDecoration(
@@ -64,7 +64,7 @@ class AddGroupScreen extends StatelessWidget {
 
               TextFormField(
                 autofocus: false,
-                controller: controller.descriptionController,
+                controller: groupController.descriptionController,
                 maxLines: null,
                 style: const TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
                 decoration: const InputDecoration(
@@ -95,16 +95,16 @@ class AddGroupScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               TextButton(
-                                onPressed: () => controller.pickStartTime(context),
+                                onPressed: () => groupController.pickStartTime(context),
                                 child: Text(
-                                  'Start Time: ${controller.formattedStartTime.value}',
+                                  'Start Time: ${groupController.formattedStartTime.value}',
                                   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.grey),
                                 ),
                               ),
                               TextButton(
-                                onPressed: () => controller.pickEndTime(context),
+                                onPressed: () => groupController.pickEndTime(context),
                                 child: Text(
-                                  'End Time: ${controller.formattedEndTime.value}',
+                                  'End Time: ${groupController.formattedEndTime.value}',
                                   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.grey),
                                 ),
                               ),
@@ -120,7 +120,7 @@ class AddGroupScreen extends StatelessWidget {
 
               TextFormField(
                 autofocus: false,
-                controller: controller.locationController,
+                controller: groupController.locationController,
                 maxLines: null,
                 style: const TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
                 decoration: const InputDecoration(
@@ -145,20 +145,20 @@ class AddGroupScreen extends StatelessWidget {
                   contentPadding: EdgeInsets.symmetric(vertical: 8),
                 ),
                 onTap: () {
-                  Get.to(() => AddUserScreen(userType: UserType.participant));
+                  Get.to(() => AddUserScreen());
                 },
               ),
               Obx(() {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ...controller.participants.map((user) => ListTile(
+                    ...groupController.participants.map((user) => ListTile(
                       leading: const Icon(Icons.person),
                       title: Text(user.fullName),
                       trailing: IconButton(
                         icon: Icon(Icons.clear),
                         onPressed: () {
-                            controller.removeParticipant(user);
+                          groupController.removeParticipant(user);
                         },
                       ),
                     )).toList(),
@@ -168,40 +168,6 @@ class AddGroupScreen extends StatelessWidget {
               const Divider(),
               const SizedBox(height: 16),
 
-              TextFormField(
-                readOnly: true,
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.supervised_user_circle),
-                  hintText: "Add Managers",
-                  focusedBorder: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  hintStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.grey),
-                  contentPadding: EdgeInsets.symmetric(vertical: 8),
-                ),
-                onTap: () {
-                  Get.to(() => AddUserScreen(userType: UserType.manager));
-                },
-              ),
-              Obx(() {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ...controller.managers.map((user) => ListTile(
-                      leading: const Icon(Icons.supervised_user_circle),
-                      title: Text(user.fullName),
-                        trailing: IconButton(
-                          icon: Icon(Icons.clear),
-                          onPressed: () {
-                            controller.removeManager(user);
-                          },
-                        ),
-
-                    )).toList(),
-                  ],
-                );
-              }),
-              const Divider(),
-
               Padding(
                 padding: const EdgeInsets.all(CSizes.defaultSpace),
                 child: SizedBox(
@@ -209,7 +175,7 @@ class AddGroupScreen extends StatelessWidget {
                   height: 45,
                   child: ElevatedButton(
                     onPressed: () async {
-                      await controller.createGroup();
+                      await groupController.createGroup();
                       Get.back();
                     },
                     child: const Text("Create group"),

@@ -6,20 +6,21 @@ class CButtonAddTask extends StatelessWidget {
       {super.key,
       required this.label,
       required this.onTap,
-      this.color ,
+      this.color, this.width = 130, this.height = 50 ,
       });
 
   final String label;
   final Function()? onTap;
   final Color? color;
+  final double width, height;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 130,
-        height: 50,
+        width: width,
+        height: height,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           color: color,

@@ -141,6 +141,38 @@ class UserRepository extends GetxController {
       throw 'Something went wrong. Please try again';
     }
   }
+  Future<List<UserModel>> getUsersByIds(List<String> ids) async {
+    try {
+      final querySnapshot = await _db.collection("Users")
+          .where(FieldPath.documentId, whereIn: ids)
+          .get();
+      return querySnapshot.docs.map((doc) => UserModel.fromSnapshot(doc)).toList();
+    } on FirebaseException catch (e) {
+      throw Exception('Error getting users: ${e.message}');
+    }
+  }
+
+  Future<UserModel?> fetchUserById(String userId) async {
+    try {
+      final DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await _db.collection("Users").doc(userId).get();
+      if (documentSnapshot.exists) {
+        return UserModel.fromSnapshot(documentSnapshot);
+      } else {
+        return null;
+      }
+    } on FirebaseException catch (e) {
+      throw CFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const CFormatException();
+    } on PlatformException catch (e) {
+      throw CPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again';
+    }
+  }
+
+
+
 
 
 }

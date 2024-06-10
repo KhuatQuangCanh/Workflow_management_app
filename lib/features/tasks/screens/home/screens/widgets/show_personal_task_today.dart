@@ -38,15 +38,6 @@ class ShowPersonalTaskToday extends StatelessWidget {
 
                 } else {
                   return Container();
-                  //   Padding(
-                  //   padding: EdgeInsets.all(CSizes.md),
-                  //   child: Column(
-                  //     children: [
-                  //       Text("You don't have a schedule today", style: TextStyle(color: Colors.grey),),
-                  //       Image(image: AssetImage(CImages.onBoardingImage1),width: 150, height: 150,),
-                  //     ],
-                  //   ),
-                  // );
                 }
               }
           )

@@ -6,9 +6,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:workflow_management_app/utils/Exceptions/firebase_exceptions.dart';
-import 'package:workflow_management_app/utils/Exceptions/format_exceptions.dart';
-import 'package:workflow_management_app/utils/Exceptions/platform_exceptions.dart';
 
 import '../../../features/tasks/models/group_model.dart';
 
@@ -23,13 +20,9 @@ class GroupRepository extends GetxController {
     try {
       await _db.collection("Groups").doc(group.id).set(group.toJson());
     } on FirebaseException catch (e) {
-      throw CFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CFormatException();
-    } on PlatformException catch (e) {
-      throw CPlatformException(e.code).message;
+      throw Exception('FirebaseException: ${e.message}');
     } catch (e) {
-      throw 'Something went wrong. Please try again';
+      throw Exception('Error saving group: $e');
     }
   }
 
@@ -39,30 +32,22 @@ class GroupRepository extends GetxController {
       if (documentSnapshot.exists) {
         return GroupModel.fromSnapshot(documentSnapshot);
       } else {
-        return GroupModel.empty();
+        throw Exception('Group not found');
       }
     } on FirebaseException catch (e) {
-      throw CFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CFormatException();
-    } on PlatformException catch (e) {
-      throw CPlatformException(e.code).message;
+      throw Exception('FirebaseException: ${e.message}');
     } catch (e) {
-      throw 'Something went wrong. Please try again';
+      throw Exception('Error fetching group: $e');
     }
   }
 
-  Future<void> updateGroup(GroupModel updatedGroup) async {
+  Future<void> updateGroup(GroupModel group) async {
     try {
-      await _db.collection("Groups").doc(updatedGroup.id).update(updatedGroup.toJson());
+      await _db.collection("Groups").doc(group.id).update(group.toJson());
     } on FirebaseException catch (e) {
-      throw CFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CFormatException();
-    } on PlatformException catch (e) {
-      throw CPlatformException(e.code).message;
+      throw Exception('FirebaseException: ${e.message}');
     } catch (e) {
-      throw 'Something went wrong. Please try again';
+      throw Exception('Error updating group: $e');
     }
   }
 
@@ -70,13 +55,9 @@ class GroupRepository extends GetxController {
     try {
       await _db.collection("Groups").doc(groupId).delete();
     } on FirebaseException catch (e) {
-      throw CFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CFormatException();
-    } on PlatformException catch (e) {
-      throw CPlatformException(e.code).message;
+      throw Exception('FirebaseException: ${e.message}');
     } catch (e) {
-      throw 'Something went wrong. Please try again';
+      throw Exception('Error deleting group: $e');
     }
   }
 
@@ -85,16 +66,11 @@ class GroupRepository extends GetxController {
       final querySnapshot = await _db.collection("Groups").get();
       return querySnapshot.docs.map((doc) => GroupModel.fromSnapshot(doc)).toList();
     } on FirebaseException catch (e) {
-      throw CFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const CFormatException();
-    } on PlatformException catch (e) {
-      throw CPlatformException(e.code).message;
+      throw Exception('FirebaseException: ${e.message}');
     } catch (e) {
-      throw 'Something went wrong. Please try again';
+      throw Exception('Error fetching groups: $e');
     }
   }
-
   Future<List<String>> uploadFiles(List<PlatformFile> files) async {
     try {
       final List<String> urls = [];
@@ -112,6 +88,23 @@ class GroupRepository extends GetxController {
       return urls;
     } catch (e) {
       throw 'Error uploading files: $e';
+    }
+  }
+  Future<List<GroupModel>> fetchGroupsByIds(List<String> groupIds) async {
+    try {
+      final List<GroupModel> groups = [];
+      for (final groupId in groupIds) {
+        final DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+        await _db.collection("Groups").doc(groupId).get();
+        if (documentSnapshot.exists) {
+          final group = GroupModel.fromSnapshot(documentSnapshot);
+          groups.add(group);
+        }
+      }
+      return groups;
+    } catch (e) {
+      print("Error fetching groups by ids: $e");
+      throw e;
     }
   }
 }

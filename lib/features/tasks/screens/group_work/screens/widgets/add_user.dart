@@ -3,13 +3,13 @@ import 'package:get/get.dart';
 
 import '../../../../controllers/group/group_controller.dart';
 
-// enum UserType { participant, manager }
 
 class AddUserScreen extends StatelessWidget {
-  final UserType userType;
-  final GroupController controller = Get.find<GroupController>();
+  final groupController = GroupController.instance;
 
-  AddUserScreen({required this.userType});
+  AddUserScreen({super.key});
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class AddUserScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(userType == UserType.participant ? 'Add Participant' : 'Add Manager'),
+        title: Text('Add Participant'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -35,15 +35,11 @@ class AddUserScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {
                 final phoneNumber = phoneController.text.trim();
-                final user = await controller.searchUserByPhoneNumber(phoneNumber);
+                final user = await groupController.searchUserByPhoneNumber(phoneNumber);
 
                 if (user != null) {
-                  if (userType == UserType.participant) {
-                    controller.addParticipant(user);
-                  } else {
-                    controller.addManager(user);
-                  }
-                  Get.snackbar("Success", "${user.fullName} added as ${userType == UserType.participant ? 'participant' : 'manager'}");
+                  groupController.addParticipant(user);
+                  Get.snackbar("Success", "${user.fullName} added as  participant ");
                   Get.back();
                 } else {
                   Get.snackbar("Error", "User not found");
@@ -52,14 +48,14 @@ class AddUserScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Text(
-                  'Add ${userType == UserType.participant ? 'Participant' : 'Manager'}',
+                  'Add Participant',
                   style: const TextStyle(color: Colors.white),
                 ),
               ),
             ),
             Expanded(
               child: Obx(() {
-                final users = userType == UserType.participant ? controller.participants : controller.managers;
+                final users = groupController.participants ;
                 return ListView.builder(
                   itemCount: users.length,
                   itemBuilder: (context, index) {
@@ -70,11 +66,7 @@ class AddUserScreen extends StatelessWidget {
                       trailing: IconButton(
                         icon: Icon(Icons.clear),
                         onPressed: () {
-                          if (userType == UserType.participant) {
-                            controller.removeParticipant(user); // Sửa lại thành user.id
-                          } else {
-                            controller.removeManager(user); // Sửa lại thành user.id
-                          }
+                          groupController.removeParticipant(user);
                         },
                       ),
 

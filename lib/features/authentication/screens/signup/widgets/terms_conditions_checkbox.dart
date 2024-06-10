@@ -45,9 +45,6 @@ class CTerm_conditions_checkbox extends StatelessWidget {
               style:
               Theme.of(context).textTheme.bodyMedium!.apply(
                 color: CColors.primary,
-                // color: dark? Colors.white: TColors.primary,
-                // decoration: TextDecoration.underline,
-                // decorationColor: dark? Colors.white: TColors.primary,
               )),
         ]))
       ],

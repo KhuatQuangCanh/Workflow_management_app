@@ -7,7 +7,7 @@ import 'package:workflow_management_app/common/styles/shadows.dart';
 import 'package:workflow_management_app/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:workflow_management_app/common/widgets/custom_shapes/containers/search_container.dart';
 import 'package:workflow_management_app/common/widgets/texts/section_heading.dart';
-import 'package:workflow_management_app/features/tasks/screens/group_tasks/Widgets/your_task.dart';
+import 'package:workflow_management_app/features/tasks/screens/group_tasks/Widgets/task_title.dart';
 import 'package:workflow_management_app/features/tasks/screens/home/screens/widgets/home_appbar.dart';
 import 'package:workflow_management_app/features/tasks/screens/home/screens/widgets/show_personal_task_today.dart';
 import 'package:workflow_management_app/features/tasks/screens/personal_tasks/models/personal_task.dart';
@@ -146,19 +146,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(height: CSizes.spaceBtwSections,),
                     CSectionHeading(title: "Group work",showActionButton: false,),
                     SizedBox(height: CSizes.spaceBtwSections/2,),
-                    SizedBox(
-                      height: 180,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        separatorBuilder: (context, index) =>
-                        const SizedBox(
-                          width: CSizes.spaceBtwItems,
-                        ),
-                        itemCount: 4,
-                        itemBuilder: (context, index) =>
-                        const CYourTasksHorizontal(),
-                      ),
-                    ),
+                    // SizedBox(
+                    //   height: 180,
+                    //   child: ListView.separated(
+                    //     scrollDirection: Axis.horizontal,
+                    //     separatorBuilder: (context, index) =>
+                    //     const SizedBox(
+                    //       width: CSizes.spaceBtwItems,
+                    //     ),
+                    //     itemCount: 4,
+                    //     itemBuilder: (context, index) {}
+                    //
+                    //   ),
+                    // ),
               
               
                   ],

@@ -40,7 +40,7 @@ class NotifyHelper {
         ?.createNotificationChannel(channel);
 
     // Hủy bỏ tất cả các thông báo hiện tại (chạy một lần khi khởi tạo ứng dụng)
-    await flutterLocalNotificationsPlugin.cancelAll();
+
   }
 
   Future<void> displayNotification({
@@ -86,7 +86,7 @@ class NotifyHelper {
         const NotificationDetails(
           android: AndroidNotificationDetails('your_channel_id', 'your_channel_name'),
         ),
-        androidAllowWhileIdle: true,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
         UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.time,

@@ -2,25 +2,42 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:workflow_management_app/data/repositories/group_task/group_task_repository.dart';
+import 'package:workflow_management_app/data/repositories/authentication/authentication_repository.dart';
+import 'package:workflow_management_app/data/repositories/group_task/task_repository.dart';
+import 'package:workflow_management_app/data/repositories/user_group/userGroup_repository.dart';
+import 'package:workflow_management_app/data/repositories/user_task/userTask_repository.dart';
 import 'package:workflow_management_app/features/tasks/models/task_model.dart';
+import 'package:workflow_management_app/features/tasks/models/user_group_model.dart';
+import 'package:workflow_management_app/features/tasks/models/user_task_model.dart';
+import 'package:workflow_management_app/features/tasks/screens/group_tasks/group_detail.dart';
+import 'package:workflow_management_app/utils/constants/colors.dart';
+import '../../../../data/repositories/group/group_repository.dart';
+import '../../../../data/repositories/user/user_repository.dart';
 import '../../../personalization/models/user_model.dart';
+import '../../models/group_model.dart';
 import '../group/group_controller.dart';
+
 enum UserType { participant, manager }
+
 class TaskController extends GetxController {
   static TaskController get instance => Get.find<TaskController>();
 
-  final TaskRepository _taskRepo = TaskRepository();
-
+  final TaskRepository _taskRepo = Get.put(TaskRepository());
+  final UserRepository _userRepo = Get.put(UserRepository());
+  final GroupUserRepository _groupUserRepo = Get.put(GroupUserRepository());
+  final UserTaskRepository _userTaskRepository = Get.put(UserTaskRepository());
+  RxList<TaskModel> groupTasks = <TaskModel>[].obs;
+  RxList<TaskModel> userTasks = <TaskModel>[].obs;
+  var groupModel =  <GroupModel>[].obs;
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   final startTime = Rx<DateTime?>(null);
   final endTime = Rx<DateTime?>(null);
-  final notificationMinutesBefore = 5.obs;
   var selectedParticipantsIds = <String>[].obs;
   var formattedStartTime = ''.obs;
   var formattedEndTime = ''.obs;
   var participants = <UserModel>[].obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -32,9 +49,6 @@ class TaskController extends GetxController {
     descriptionController.dispose();
     super.onClose();
   }
-
-
-
 
   Future<void> pickStartTime(BuildContext context) async {
     final dateTime = await _pickDateTime(context);
@@ -84,25 +98,7 @@ class TaskController extends GetxController {
     return formatter.format(dateTime);
   }
 
-  // List<UserModel> get groupParticipants {
-  //   if (GroupController.instance != null &&
-  //       GroupController.instance.participants.isNotEmpty) {
-  //     return GroupController.instance.participants;
-  //   } else {
-  //     return [];
-  //   }
-  // }
 
-  Future<void> addParticipant(UserModel user) async {
-    if (!participants.contains(user)) {
-      participants.add(user);
-    }
-  }
-
-  Future<void> removeParticipant(UserModel user) async {
-    participants.remove(user);
-    selectedParticipantsIds.remove(user.id);
-  }
 
   Future<void> createAndSaveTask(String groupId) async {
     try {
@@ -116,28 +112,127 @@ class TaskController extends GetxController {
         id: FirebaseFirestore.instance.collection('Tasks').doc().id,
         title: titleController.text,
         description: descriptionController.text,
-        groupId: groupId,
-        assigneeIds:participants.map((user) => user.id).toList(),
         startTime: startTime.value!,
         endTime: endTime.value!,
         isCompleted: false,
-        notificationMinutesBefore: notificationMinutesBefore.value,
+        groupId: groupId,
       );
+      for (final participant in participants) {
+        final taskUser = UserTaskModel(
+          id: FirebaseFirestore.instance.collection('UserTasks').doc().id,
+          userId: participant.id,
+          taskId: newTask.id,
+
+        );
+        await _userTaskRepository.saveUserTask(taskUser);
+      }
 
       await _taskRepo.saveTask(newTask);
-      Get.back(closeOverlays: true);
+
+      titleController.clear();
+      descriptionController.clear();
+      startTime.value = null;
+      endTime.value = null;
+      formattedStartTime.value = '';
+      formattedEndTime.value = '';
+      participants.clear();
+      Get.back();
+      fetchTasksByGroupId(groupId);
+      fetchUserTasksInGroup(groupId);
     } catch (e) {
       Get.snackbar("Error", e.toString());
     }
   }
 
-  Future<void> updateTask(TaskModel updatedTask) async {
+  Future<void> fetchTasksByGroupId(String groupId) async {
     try {
-      await _taskRepo.updateTask(updatedTask);
-      Get.back(closeOverlays: true);
+      final tasks = await _taskRepo.getTasksByGroupId(groupId);
+      groupTasks.assignAll(tasks);
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      // Xử lý lỗi nếu có
+      print("Error fetching tasks by groupId: $e");
     }
+  }
+  Future<void> fetchUserTasksInGroup(String groupId) async {
+    try {
+      await fetchTasksByGroupId(groupId);
+      final currentUser = AuthenticationRepository.instance.authUser?.uid;
+      if (currentUser == null) throw Exception("User not authenticated");
+
+      final userTasksInGroup = await _userTaskRepository.fetchUserTasksByUserId(currentUser);
+      final taskIds = userTasksInGroup.map((userTask) => userTask.taskId).toList();
+      final userTasksFiltered = groupTasks.where((task) => taskIds.contains(task.id)).toList();
+
+      userTasks.assignAll(userTasksFiltered);
+    } catch (e) {
+      print("Error fetching user tasks in group: $e");
+    }
+  }
+
+  // Future<void> fetchUserTasks(String userId) async {
+  //   final userTasksList = await _userTaskRepository.getUserTasks(userId);
+  //   userTasks.assignAll(userTasksList);
+  // }
+
+  Future<void> showParticipantsDialog(BuildContext context, String groupId) async {
+    try {
+      // Lấy danh sách người tham gia nhóm
+      final List<GroupUserModel> groupUsers = await _groupUserRepo.fetchGroupUsersByGroupId(groupId);
+      final List<UserModel> participantsList = [];
+
+      for (final groupUser in groupUsers) {
+        final user = await _userRepo.fetchUserById(groupUser.userId);
+        if (user != null) {
+          participantsList.add(user);
+        }
+      }
+
+      // Hiển thị dialog với danh sách người tham gia
+      showDialog(
+        context:Get.context!,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Members :'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: [
+                  ...participantsList.map((user) => CheckboxListTile(
+                    value: participants.contains(user),
+                    title: Text(user.fullName),
+                    onChanged: (isSelected) {
+                      if (isSelected == true) {
+                        if (!participants.contains(user)) {
+                          participants.add(user);
+                        }
+                      } else {
+                        if (participants.contains(user)) {
+                          participants.remove(user);
+                        }
+                      }
+                      Navigator.of(context).pop();
+                      showParticipantsDialog(Get.context!, groupId);
+                    },
+                  )).toList(),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                child: Text('Close'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } catch (e) {
+      Get.snackbar("Error", "Error fetching participants: $e");
+    }
+  }
+
+  void removeParticipant(UserModel participant) {
+    participants.remove(participant);
   }
 }
-

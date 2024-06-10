@@ -111,7 +111,7 @@ class CSignupForm extends StatelessWidget {
             height: CSizes.spaceBtwInputFields,
           ),
 
-          const CTerm_conditions_checkbox(),
+          // const CTerm_conditions_checkbox(),
           const SizedBox(
             height: CSizes.spaceBtwSections,
           ),

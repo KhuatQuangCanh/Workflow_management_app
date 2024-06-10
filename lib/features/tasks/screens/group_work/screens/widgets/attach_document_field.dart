@@ -5,7 +5,7 @@ import 'package:workflow_management_app/features/tasks/controllers/group/group_c
 import 'package:workflow_management_app/utils/constants/sizes.dart';
 
 class AttachDocumentField extends StatelessWidget {
-  final GroupController controller = Get.find<GroupController>();
+  final controller = GroupController.instance;
 
   AttachDocumentField({Key? key}) : super(key: key);
 
@@ -31,7 +31,7 @@ class AttachDocumentField extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: controller.documents.map((file) {
               return Padding(
-                padding: const EdgeInsets.symmetric(vertical: CSizes.defaultSpace / 2),
+                padding: const EdgeInsets.all(1),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
