@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "582976896717",
+    "project_id": "workflow-management-app-9ecb1",
+    "storage_bucket": "workflow-management-app-9ecb1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:582976896717:android:332f04312a4e98138f7384",
+        "android_client_info": {
+          "package_name": "com.example.workflow_management_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "582976896717-p37jgks2lj3r9jdm0qdn0tne8h8d028b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.workflow_management_app",
+            "certificate_hash": "84bf70b032495cd9dca179c21feae4ed0572b317"
+          }
+        },
+        {
+          "client_id": "582976896717-e3tfmssh9rsh62fja00qt0vsgsh9livj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNu3D1c_BJihZZo7-ra-rdPL32WEIR2hk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "582976896717-e3tfmssh9rsh62fja00qt0vsgsh9livj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "582976896717-p3ikp5paspdc1p9omk1o0g48bt1t8o9t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.workflowManagementApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -42,6 +42,7 @@ class ForgetPassword extends StatelessWidget {
             Form(
               key: controller.forgetPasswordFormKey,
               child: TextFormField(
+                controller: controller.email,
                 decoration: InputDecoration(
                     labelText: CTexts.email, prefixIcon: Icon(Iconsax.direct_right)
                 ),

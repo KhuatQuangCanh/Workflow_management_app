@@ -13,6 +13,7 @@ import 'package:workflow_management_app/features/tasks/screens/home/screens/widg
 import 'package:workflow_management_app/features/tasks/screens/personal_tasks/models/personal_task.dart';
 import 'package:workflow_management_app/services/notification_services.dart';
 import 'package:workflow_management_app/utils/constants/colors.dart';
+import 'package:workflow_management_app/utils/constants/image_strings.dart';
 import 'package:workflow_management_app/utils/constants/sizes.dart';
 
 import '../../../../../utils/helpers/helper_functions.dart';
@@ -84,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Container(
                       padding: EdgeInsets.only(left: CSizes.sm),
                       width: MediaQuery.of(context).size.width,
-                      height: 230,
+                      height: 300,
                       decoration: BoxDecoration(
                           boxShadow: [CShadowStyle.verticalProductShadow],
                           borderRadius:
@@ -144,8 +145,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
               
                     SizedBox(height: CSizes.spaceBtwSections,),
-                    CSectionHeading(title: "Group work",showActionButton: false,),
-                    SizedBox(height: CSizes.spaceBtwSections/2,),
+                     SizedBox(
+                       height: 180,
+                       child: Image(image: AssetImage(CImages.onBoardingImage1)),
+                     )
+                    // CSectionHeading(title: "Group work",showActionButton: false,),
+                    // SizedBox(height: CSizes.spaceBtwSections/2,),
                     // SizedBox(
                     //   height: 180,
                     //   child: ListView.separated(

@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:workflow_management_app/data/repositories/authentication/authentication_repository.dart';
@@ -32,9 +32,9 @@ class GroupController extends GetxController {
   final TaskRepository _taskRepo = Get.put(TaskRepository());
   final UserTaskRepository _userTaskRepository = Get.put(UserTaskRepository());
 
-
   final GroupUserRepository _groupUserRepo = Get.put(GroupUserRepository());
   final RxList<GroupUserModel> groupUsers = <GroupUserModel>[].obs;
+
   // Danh sách các nhóm mà người dùng hiện tại thuộc vào
   final RxList<GroupModel> userGroups = <GroupModel>[].obs;
 
@@ -55,6 +55,7 @@ class GroupController extends GetxController {
   final RxBool isCreator = false.obs;
 
   String UserId = AuthenticationRepository.instance.authUser!.uid;
+
   @override
   void onInit() {
     super.onInit();
@@ -71,8 +72,6 @@ class GroupController extends GetxController {
     locationController.dispose();
     super.onClose();
   }
-
-
 
   Future<void> pickStartTime(BuildContext context) async {
     final pickedDate = await showDatePicker(
@@ -170,6 +169,7 @@ class GroupController extends GetxController {
   void removeDocument(PlatformFile platformFile) {
     documents.remove(platformFile);
   }
+
   void removeAttachmentUrl(String url) {
     attachmentUrls.remove(url);
   }
@@ -240,8 +240,9 @@ class GroupController extends GetxController {
 
   Future<void> fetchUserGroups() async {
     try {
-      final List<GroupUserModel> userGroupModels = await _groupUserRepo
-          .fetchGroupUsersByUserId(AuthenticationRepository.instance.authUser!.uid);
+      final List<GroupUserModel> userGroupModels =
+          await _groupUserRepo.fetchGroupUsersByUserId(
+              AuthenticationRepository.instance.authUser!.uid);
       final List<String> groupIds =
           userGroupModels.map((groupUser) => groupUser.groupId).toList();
       // Lấy thông tin của các nhóm từ danh sách các ID nhóm
@@ -255,7 +256,8 @@ class GroupController extends GetxController {
 
   Future<void> fetchGroupParticipantsCount(String groupId) async {
     try {
-      final List<GroupUserModel> groupUsers = await _groupUserRepo.fetchGroupUsersByGroupId(groupId);
+      final List<GroupUserModel> groupUsers =
+          await _groupUserRepo.fetchGroupUsersByGroupId(groupId);
       participantsCount.value = groupUsers.length;
     } catch (e) {
       print("Error fetching group participants count: $e");
@@ -271,7 +273,8 @@ class GroupController extends GetxController {
         throw 'Please fill in all required fields';
       }
 
-      final List<String> newAttachmentUrls = await _groupRepo.uploadFiles(documents);
+      final List<String> newAttachmentUrls =
+          await _groupRepo.uploadFiles(documents);
 
       final updatedGroup = GroupModel(
         id: groupId,
@@ -298,7 +301,8 @@ class GroupController extends GetxController {
 
   Future<void> fetchGroupParticipants(String groupId) async {
     try {
-      final List<GroupUserModel> groupUsers = await _groupUserRepo.fetchGroupUsersByGroupId(groupId);
+      final List<GroupUserModel> groupUsers =
+          await _groupUserRepo.fetchGroupUsersByGroupId(groupId);
       final List<UserModel> users = [];
 
       for (final groupUser in groupUsers) {
@@ -311,12 +315,12 @@ class GroupController extends GetxController {
 
       // Kiểm tra nếu người dùng hiện tại là người tạo nhóm
       isCreator.value = groupUsers.any((groupUser) =>
-      groupUser.userId == UserId &&
-          groupUser.role == 'creator');
+          groupUser.userId == UserId && groupUser.role == 'creator');
     } catch (e) {
       Get.snackbar("Error", "Error fetching participants: $e");
     }
   }
+
   Future<void> updateMember(String groupId) async {
     try {
       final groupUsers = await _groupUserRepo.fetchGroupUsersByGroupId(groupId);
@@ -339,10 +343,13 @@ class GroupController extends GetxController {
 
       Get.snackbar("Success", "Members updated successfully");
       fetchGroupParticipants(groupId);
+      fetchGroupParticipantsCount(groupId);
+      Get.back();
     } catch (e) {
       Get.snackbar("Error", "Error updating members: $e");
     }
   }
+
   Future<void> deleteGroup(String groupId) async {
     try {
       // Lấy danh sách task của group

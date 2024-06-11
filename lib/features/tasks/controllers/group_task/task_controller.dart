@@ -10,14 +10,10 @@ import 'package:workflow_management_app/data/repositories/user_task/userTask_rep
 import 'package:workflow_management_app/features/tasks/models/task_model.dart';
 import 'package:workflow_management_app/features/tasks/models/user_group_model.dart';
 import 'package:workflow_management_app/features/tasks/models/user_task_model.dart';
-import 'package:workflow_management_app/features/tasks/screens/group_tasks/group_detail.dart';
-import 'package:workflow_management_app/utils/constants/colors.dart';
 import 'package:workflow_management_app/utils/constants/sizes.dart';
-import '../../../../data/repositories/group/group_repository.dart';
 import '../../../../data/repositories/user/user_repository.dart';
 import '../../../personalization/models/user_model.dart';
 import '../../models/group_model.dart';
-import '../group/group_controller.dart';
 
 enum UserType { participant, manager }
 
@@ -30,7 +26,7 @@ class TaskController extends GetxController {
   final UserTaskRepository _userTaskRepository = Get.put(UserTaskRepository());
   RxList<TaskModel> groupTasks = <TaskModel>[].obs;
   RxList<TaskModel> userTasks = <TaskModel>[].obs;
-  var groupModel =  <GroupModel>[].obs;
+  var groupModel = <GroupModel>[].obs;
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   final startTime = Rx<DateTime?>(null);
@@ -41,6 +37,7 @@ class TaskController extends GetxController {
   var participants = <UserModel>[].obs;
   RxBool isCompleted = false.obs;
   RxList<UserModel> assignedUsers = <UserModel>[].obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -52,7 +49,6 @@ class TaskController extends GetxController {
       // Gọi update() để cập nhật giao diện khi groupTasks thay đổi
       update();
     });
-
   }
 
   @override
@@ -110,8 +106,6 @@ class TaskController extends GetxController {
     return formatter.format(dateTime);
   }
 
-
-
   Future<void> createAndSaveTask(String groupId) async {
     try {
       if (titleController.text.isEmpty ||
@@ -134,7 +128,6 @@ class TaskController extends GetxController {
           id: FirebaseFirestore.instance.collection('UserTasks').doc().id,
           userId: participant.id,
           taskId: newTask.id,
-
         );
         await _userTaskRepository.saveUserTask(taskUser);
       }
@@ -172,9 +165,12 @@ class TaskController extends GetxController {
       final currentUser = AuthenticationRepository.instance.authUser?.uid;
       if (currentUser == null) throw Exception("User not authenticated");
 
-      final userTasksInGroup = await _userTaskRepository.fetchUserTasksByUserId(currentUser);
-      final taskIds = userTasksInGroup.map((userTask) => userTask.taskId).toList();
-      final userTasksFiltered = groupTasks.where((task) => taskIds.contains(task.id)).toList();
+      final userTasksInGroup =
+          await _userTaskRepository.fetchUserTasksByUserId(currentUser);
+      final taskIds =
+          userTasksInGroup.map((userTask) => userTask.taskId).toList();
+      final userTasksFiltered =
+          groupTasks.where((task) => taskIds.contains(task.id)).toList();
 
       userTasks.assignAll(userTasksFiltered);
     } catch (e) {
@@ -182,10 +178,12 @@ class TaskController extends GetxController {
     }
   }
 
-  Future<void> showParticipantsDialog(BuildContext context, String groupId) async {
+  Future<void> showParticipantsDialog(
+      BuildContext context, String groupId) async {
     try {
       // Lấy danh sách người tham gia nhóm
-      final List<GroupUserModel> groupUsers = await _groupUserRepo.fetchGroupUsersByGroupId(groupId);
+      final List<GroupUserModel> groupUsers =
+          await _groupUserRepo.fetchGroupUsersByGroupId(groupId);
       final List<UserModel> participantsList = [];
 
       for (final groupUser in groupUsers) {
@@ -197,30 +195,32 @@ class TaskController extends GetxController {
 
       // Hiển thị dialog với danh sách người tham gia
       showDialog(
-        context:Get.context!,
+        context: Get.context!,
         builder: (context) {
           return AlertDialog(
             title: Text('Members :'),
             content: SingleChildScrollView(
               child: ListBody(
                 children: [
-                  ...participantsList.map((user) => CheckboxListTile(
-                    value: participants.contains(user),
-                    title: Text(user.fullName),
-                    onChanged: (isSelected) {
-                      if (isSelected == true) {
-                        if (!participants.contains(user)) {
-                          participants.add(user);
-                        }
-                      } else {
-                        if (participants.contains(user)) {
-                          participants.remove(user);
-                        }
-                      }
-                      Navigator.of(context).pop();
-                      showParticipantsDialog(Get.context!, groupId);
-                    },
-                  )).toList(),
+                  ...participantsList
+                      .map((user) => CheckboxListTile(
+                            value: participants.contains(user),
+                            title: Text(user.fullName),
+                            onChanged: (isSelected) {
+                              if (isSelected == true) {
+                                if (!participants.contains(user)) {
+                                  participants.add(user);
+                                }
+                              } else {
+                                if (participants.contains(user)) {
+                                  participants.remove(user);
+                                }
+                              }
+                              Navigator.of(context).pop();
+                              showParticipantsDialog(Get.context!, groupId);
+                            },
+                          ))
+                      .toList(),
                 ],
               ),
             ),
@@ -249,11 +249,12 @@ class TaskController extends GetxController {
       await _taskRepo.updateTaskCompletion(taskId, isCompleted);
       final taskIndex = groupTasks.indexWhere((task) => task.id == taskId);
       if (taskIndex != -1) {
-        final updatedTask = groupTasks[taskIndex].copyWith(isCompleted: isCompleted);
+        final updatedTask =
+            groupTasks[taskIndex].copyWith(isCompleted: isCompleted);
         groupTasks[taskIndex] = updatedTask;
         userTasks[taskIndex] = updatedTask;
       }
-        Get.snackbar("Success", "Task marked as done");
+      Get.snackbar("Success", "Task marked as done");
     } catch (e) {
       Get.snackbar("Error", "Error updating task completion: $e");
     }
@@ -261,7 +262,8 @@ class TaskController extends GetxController {
 
   Future<void> fetchAssignedUsers(String taskId) async {
     try {
-      final userTasks = await _userTaskRepository.fetchUserTasksByTaskId(taskId);
+      final userTasks =
+          await _userTaskRepository.fetchUserTasksByTaskId(taskId);
       final userIds = userTasks.map((userTask) => userTask.userId).toList();
       final users = await _userRepo.getUsersByIds(userIds);
       assignedUsers.assignAll(users);
@@ -270,7 +272,8 @@ class TaskController extends GetxController {
     }
   }
 
-  Future<void> editTask(String taskId, String newTitle, String newDescription, DateTime newStartTime, DateTime newEndTime, String groupId) async {
+  Future<void> editTask(String taskId, String newTitle, String newDescription,
+      DateTime newStartTime, DateTime newEndTime, String groupId) async {
     try {
       // Tạo một đối tượng task mới với thông tin đã cập nhật
       final updatedTask = TaskModel(
@@ -317,12 +320,16 @@ class TaskController extends GetxController {
                   controller: titleController,
                   decoration: InputDecoration(labelText: 'Title'),
                 ),
-                SizedBox(height: CSizes.spaceBtwItems,),
+                SizedBox(
+                  height: CSizes.spaceBtwItems,
+                ),
                 TextField(
                   controller: descriptionController,
                   decoration: InputDecoration(labelText: 'Description'),
                 ),
-                SizedBox(height: CSizes.spaceBtwItems,),
+                SizedBox(
+                  height: CSizes.spaceBtwItems,
+                ),
                 TextField(
                   decoration: InputDecoration(labelText: 'Start Time'),
                   readOnly: true,
@@ -332,10 +339,12 @@ class TaskController extends GetxController {
                       startTime = dateTime;
                     }
                   },
-                  controller: TextEditingController(text: DateFormat("dd/MM/yyyy HH:mm").format(startTime)),
+                  controller: TextEditingController(
+                      text: DateFormat("dd/MM/yyyy HH:mm").format(startTime)),
                 ),
-                SizedBox(height: CSizes.spaceBtwItems,),
-
+                SizedBox(
+                  height: CSizes.spaceBtwItems,
+                ),
                 TextField(
                   decoration: InputDecoration(labelText: 'End Time'),
                   readOnly: true,
@@ -345,10 +354,12 @@ class TaskController extends GetxController {
                       endTime = dateTime;
                     }
                   },
-                  controller: TextEditingController(text: DateFormat("dd/MM/yyyy HH:mm").format(endTime)),
+                  controller: TextEditingController(
+                      text: DateFormat("dd/MM/yyyy HH:mm").format(endTime)),
                 ),
-                SizedBox(height: CSizes.spaceBtwItems,),
-
+                SizedBox(
+                  height: CSizes.spaceBtwItems,
+                ),
               ],
             ),
           ),
@@ -405,6 +416,7 @@ class TaskController extends GetxController {
     }
     return null;
   }
+
   Future<void> deleteTask(String taskId) async {
     try {
       // Xóa các comment liên quan đến task trước
@@ -425,5 +437,4 @@ class TaskController extends GetxController {
       Get.snackbar("Error", "Error deleting task: $e");
     }
   }
-
 }

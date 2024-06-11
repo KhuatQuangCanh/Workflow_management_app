@@ -19,19 +19,19 @@ class ForgetPasswordController extends GetxController {
       // Check Internet Connectivity
       final isConnected = await NetworkManager.instance.isConnected();
       if(!isConnected) return;
-
       // Form validation
       if(!forgetPasswordFormKey.currentState!.validate()) return;
 
       await AuthenticationRepository.instance.sendPasswordResetEmail(email.text.trim());
 
+      print('show errow');
       // show success screen
       CLoaders.successSnackBar(title: 'Email Sent', message: 'Email link snet to reset your passsword.');
 
       // redirect
       Get.to(() => ResetPasswordScreen(email: email.text.trim(),));
     } catch (e) {
-      CLoaders.errorSnackBar(title: 'Oh Snap!', message: e.toString());
+      CLoaders.errorSnackBar(title: 'lỗi roài ', message: e.toString());
     }
   }
 

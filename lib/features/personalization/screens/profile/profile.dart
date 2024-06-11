@@ -64,7 +64,7 @@ class ProfileScreen extends StatelessWidget {
               CProfileMenu(title: 'User ID', value: controller.user.value.id,icon: Iconsax.copy , onpressed: () {},),
               CProfileMenu(title: 'E-mail', value: controller.user.value.email, onpressed: () {},),
               CProfileMenu(title: 'Phone Number', value:controller.user.value.phoneNumber, onpressed: () {},),
-              CProfileMenu(title: 'Date of Birth', value: '07/06/2002', onpressed: () {},),
+              // CProfileMenu(title: 'Date of Birth', value: '07/06/2002', onpressed: () {},),
 
               const SizedBox(height: CSizes.spaceBtwItems/1.5,),
               const Divider(),
