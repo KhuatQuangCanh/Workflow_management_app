@@ -15,6 +15,7 @@ class App extends StatelessWidget {
       theme: CAppTheme.lightTheme,
       darkTheme: CAppTheme.darkTheme,
       initialBinding: GeneralBindings(),
+      debugShowCheckedModeBanner: false,
       home: const Scaffold(backgroundColor: CColors.primary, body: Center(child: CircularProgressIndicator(color: CColors.white,),),),
     );
   }
