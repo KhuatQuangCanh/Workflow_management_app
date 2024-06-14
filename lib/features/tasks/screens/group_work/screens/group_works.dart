@@ -19,7 +19,6 @@ class GroupWorksScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final GroupController groupController = Get.put(GroupController());
-    // Không cần lấy allGroups ở đây, nó sẽ tự động cập nhật thông qua Obx
     return Scaffold(
         appBar: CAppBar(
           title: Text(

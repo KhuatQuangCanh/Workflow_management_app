@@ -32,13 +32,15 @@ class ShowTasks extends StatelessWidget {
                 task.date ==
                     DateFormat("dd/MM/yyyy")
                         .format(controller.selectedDate.value)) {
-              DateTime date = DateFormat("HH:mm").parse(task.startTime.toString());
-              var myTime = DateFormat("HH:mm").format(date);
-
+              DateTime startTime = DateFormat("HH:mm").parse(task.startTime.toString());
+              // var myTime = DateFormat("HH:mm").format(startTime);
+              int remindMinutes = controller.selectedRemind.value;
+              DateTime remindTime = startTime.subtract(Duration(minutes: remindMinutes));
+              var formattedTime =  DateFormat("HH:mm").format(remindTime);
               // Tạo thông báo lên thiết bị
               NotifyHelper().scheduledNotification(
-                int.parse(myTime.split(":")[0]),
-                int.parse(myTime.split(":")[1]),
+                int.parse(formattedTime.split(":")[0]),
+                int.parse(formattedTime.split(":")[1]),
                 task,
               );
 

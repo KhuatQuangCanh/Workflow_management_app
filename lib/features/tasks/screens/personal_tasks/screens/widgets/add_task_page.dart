@@ -25,7 +25,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     final controller = Get.put(PersonalTasksController());
 
     List<int> remindList = [5, 10, 15, 30,];
-    List<String> repeatList = ["None", "Daily", "Weekly", "Monthly"];
+    List<String> repeatList = ["None", "Daily"];
 
     return Scaffold(
         appBar: const CAppBar(

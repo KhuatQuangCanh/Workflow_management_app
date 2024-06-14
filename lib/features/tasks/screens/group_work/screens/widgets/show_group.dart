@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:workflow_management_app/features/tasks/screens/group_tasks/group_detail.dart';
+import 'package:workflow_management_app/utils/constants/image_strings.dart';
 
 import '../../../../controllers/group/group_controller.dart';
 import '../../../../models/group_model.dart';
@@ -18,7 +19,13 @@ class ShowGroup extends StatelessWidget {
       child: Obx(() {
         if (groupController.userGroups.isEmpty) {
           return Center(
-            child: CircularProgressIndicator(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("You are not participating in any events", style: Theme.of(context).textTheme.titleSmall,),
+                Image(image: AssetImage(CImages.staticSuccessTllustration)),
+              ],
+            ),
           );
         }
 
