@@ -4,6 +4,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:workflow_management_app/common/widgets/appbar/appbar.dart';
 import 'package:workflow_management_app/features/personalization/controllers/user_controller.dart';
 import 'package:workflow_management_app/features/personalization/screens/profile/widgets/change_name.dart';
+import 'package:workflow_management_app/features/personalization/screens/profile/widgets/change_phonenumber.dart';
 import 'package:workflow_management_app/features/personalization/screens/profile/widgets/profile_menu.dart';
 
 import '../../../../common/widgets/images/circular_images.dart';
@@ -63,7 +64,7 @@ class ProfileScreen extends StatelessWidget {
 
               CProfileMenu(title: 'User ID', value: controller.user.value.id,icon: Iconsax.copy , onpressed: () {},),
               CProfileMenu(title: 'E-mail', value: controller.user.value.email, onpressed: () {},),
-              CProfileMenu(title: 'Phone Number', value:controller.user.value.phoneNumber, onpressed: () {},),
+              CProfileMenu(title: 'Phone Number', value:controller.user.value.phoneNumber, onpressed: () => Get.to(() => const ChangePhonenumber()),),
               // CProfileMenu(title: 'Date of Birth', value: '07/06/2002', onpressed: () {},),
 
               const SizedBox(height: CSizes.spaceBtwItems/1.5,),
